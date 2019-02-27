@@ -29,9 +29,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save # => Validation
       # Sucess
-      @user.send_activation_email
-      flash[:info] = "アカウントを有効にするためにメールをチェックしてください."
-      redirect_to root_url
+      UserNotifier.send_signup_email(@user).deliver
+      redirect_to(@user, :notice => 'User created')
     else
       # Failure
       render 'new'      
